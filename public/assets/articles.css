@@ -48,3 +48,5 @@
 .prose h1{ font-size:1.9rem; font-weight:700; margin:2.2em 0 .7em }
 .prose strong{ color:#FFFFFF }
 @media print{ .post-back,.post-foot,.site-header,.site-footer{ display:none } }
+
+.site-footer .footer-inner{ justify-content:center; text-align:center }
