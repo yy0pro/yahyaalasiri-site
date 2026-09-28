@@ -1,0 +1,55 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('articles');
+  return posts
+    .filter((p) => !p.data.draft)
+    .map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const formatDate = (d) =>
+  new Intl.DateTimeFormat('ar', { year: 'numeric', month: 'long', day: 'numeric' }).format(d);
+---
+<Base title={post.data.title + ' — يحيى العسيري'} description={post.data.description || post.data.title} active="articles">
+<main>
+  <article class="post">
+    <header class="post-head">
+      <div class="wrap post-head-inner">
+        <a class="post-back" href="/articles">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16"/><path d="m14 6 6 6-6 6"/></svg>
+          كل المقالات
+        </a>
+        <h1>{post.data.title}</h1>
+        <p class="post-meta">
+          <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+          {post.data.tags.length > 0 && (
+            <span class="post-tags">{post.data.tags.map((t) => <span class="post-tag">{t}</span>)}</span>
+          )}
+        </p>
+        {post.data.description && <p class="post-lead">{post.data.description}</p>}
+      </div>
+    </header>
+
+    {post.data.cover && (
+      <div class="wrap post-cover">
+        <img src={post.data.cover} alt="" loading="lazy">
+      </div>
+    )}
+
+    <div class="wrap prose">
+      <Content />
+    </div>
+
+    <div class="wrap post-foot">
+      <a class="btn btn-ghost" href="/articles">
+        كل المقالات
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4"/><path d="m10 6-6 6 6 6"/></svg>
+      </a>
+    </div>
+  </article>
+</main>
+</Base>

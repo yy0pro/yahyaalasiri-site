@@ -1,0 +1,96 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('articles'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const formatDate = (d) =>
+  new Intl.DateTimeFormat('ar', { year: 'numeric', month: 'long', day: 'numeric' }).format(d);
+---
+<Base title="المقالات والشروحات — يحيى سليمان العسيري" description="شروحات مبسطة عن بناء الأنظمة بالذكاء الاصطناعي والتقنية اليومية." active="articles">
+<main>
+
+  <header class="page-head">
+    <div class="wrap">
+      <div class="page-head-inner">
+        <h1>المقالات والشروحات</h1>
+        {posts.length === 0 && <span class="badge-live"><span class="live-dot" aria-hidden="true"></span>قيد الإعداد</span>}
+      </div>
+      <p class="page-lead">{posts.length === 0 ? 'قريباً — شروحات مبسطة عن بناء الأنظمة بالذكاء الاصطناعي والتقنية اليومية.' : 'شروحات مبسطة عن بناء الأنظمة بالذكاء الاصطناعي وأدوات التقنية اليومية.'}</p>
+    </div>
+  </header>
+
+  <section class="sec sec--flush">
+    <div class="wrap">
+      {posts.length === 0 ? (
+        <ul class="articles articles--flush">
+          <li class="article-row">
+            <span class="article-mark" aria-hidden="true">01</span>
+            <div class="article-main">
+              <h3>لماذا أبني الأنظمة بالذكاء الاصطناعي؟</h3>
+              <p>عن الطريقة التي أبني بها أنظمة كاملة دون خلفية برمجية تقليدية.</p>
+            </div>
+            <span class="pill-soon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.5V12l3.25 2"/></svg>
+              قريباً
+            </span>
+          </li>
+          <li class="article-row">
+            <span class="article-mark" aria-hidden="true">02</span>
+            <div class="article-main">
+              <h3>من الفكرة إلى نظام يعمل: قصة منصتين</h3>
+              <p>كيف تحولت مشكلات تشغيلية يومية إلى منصتين يستخدمهما الجميع.</p>
+            </div>
+            <span class="pill-soon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.5V12l3.25 2"/></svg>
+              قريباً
+            </span>
+          </li>
+          <li class="article-row">
+            <span class="article-mark" aria-hidden="true">03</span>
+            <div class="article-main">
+              <h3>التوقيع الإلكتروني بدون ورق</h3>
+              <p>شرح مبسط لكيفية عمل منصة الحضور والانصراف.</p>
+            </div>
+            <span class="pill-soon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.5V12l3.25 2"/></svg>
+              قريباً
+            </span>
+          </li>
+        </ul>
+      ) : (
+        <ul class="articles articles--flush">
+          {posts.map((post, i) => (
+            <li class="article-row">
+              <span class="article-mark" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <div class="article-main">
+                <h3><a href={'/articles/' + post.id + '/'}>{post.data.title}</a></h3>
+                {post.data.description && <p>{post.data.description}</p>}
+                {post.data.tags.length > 0 && (
+                  <p class="post-tags">{post.data.tags.map((t) => <span class="post-tag">{t}</span>)}</p>
+                )}
+              </div>
+              <span class="pill-soon">{formatDate(post.data.date)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+
+  <section class="closing">
+    <div class="wrap closing-inner">
+      <h2>هل لديكم فرصة تقنية أو مشروع يحتاج نظاماً يعمل؟</h2>
+      <div class="page-actions">
+        <a class="btn btn-ghost" href="/#contact">
+          تواصل
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4"/><path d="m10 6-6 6 6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+</Base>

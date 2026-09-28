@@ -1,0 +1,58 @@
+---
+const {
+  title = 'يحيى سليمان العسيري | موظف تقني — أنظمة وحلول رقمية',
+  description = 'أبني وأشغّل أنظمة إلكترونية تحل مشكلات تشغيلية حقيقية، من الفكرة إلى التشغيل المستمر، بالاستفادة من أدوات الذكاء الاصطناعي.',
+  active = '',
+} = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title}</title>
+<meta name="description" content={description}>
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0A0D0C">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/logo-32.png?v=2">
+<link rel="apple-touch-icon" href="/assets/logo-180.png">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/articles.css">
+<link rel="alternate" type="application/rss+xml" title="المقالات — يحيى العسيري" href="/rss.xml">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/">
+      <img src="/assets/logo-96.png" width="32" height="32" alt="">
+      <span>يحيى العسيري</span>
+    </a>
+    <nav class="site-nav" aria-label="التنقل الرئيسي">
+      <ul>
+        <li><a href="/" aria-current={active === 'home' ? 'page' : undefined}>الرئيسية</a></li>
+        <li><a href="/cv" aria-current={active === 'cv' ? 'page' : undefined}>السيرة الذاتية</a></li>
+        <li><a href="/#platforms">المنصات</a></li>
+        <li><a href="/articles" aria-current={active === 'articles' ? 'page' : undefined}>المقالات</a></li>
+        <li><a href="/#contact">تواصل</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-primary btn-sm header-cta" href="/assets/cv-yahya.pdf" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v10"/><path d="m8 10 4 4 4-4"/><path d="M5 19h14"/></svg>
+      <span class="btn-label">تحميل السيرة (<bdi>PDF</bdi>)</span>
+    </a>
+  </div>
+</header>
+
+<slot />
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <img class="footer-mark" src="/assets/logo-96.png" width="26" height="26" alt="">
+    <p><bdi>© 2026</bdi> يحيى سليمان العسيري · بُني هذا الموقع بالاستفادة من أدوات الذكاء الاصطناعي. · <a class="footer-link" href="/cv">رابط السيرة الذاتية</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>

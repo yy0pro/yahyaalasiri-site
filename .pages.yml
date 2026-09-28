@@ -1,0 +1,37 @@
+media:
+  - name: uploads
+    label: الصور
+    input: public/assets/uploads
+    output: /assets/uploads
+content:
+  - name: articles
+    label: المقالات
+    type: collection
+    path: src/content/articles
+    view:
+      fields: [title, date, draft]
+    fields:
+      - name: title
+        label: العنوان
+        type: string
+        required: true
+      - name: description
+        label: الوصف المختصر
+        type: text
+      - name: date
+        label: التاريخ
+        type: date
+        required: true
+      - name: tags
+        label: الوسوم
+        type: string
+        list: true
+      - name: cover
+        label: صورة الغلاف
+        type: image
+      - name: draft
+        label: مسودة (لا تُنشر)
+        type: boolean
+      - name: body
+        label: نص المقال
+        type: rich-text
