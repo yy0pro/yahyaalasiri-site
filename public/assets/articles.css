@@ -38,6 +38,8 @@
 .post-foot{ padding:26px 0 76px }
 .article-main h3 a{ color:inherit }
 .article-main h3 a:hover{ color:var(--accent) }
+.read-more{ white-space:nowrap }
+.post-date{ color:var(--muted); font-size:.85rem; white-space:nowrap; margin-inline-end:6px }
 .hl-teal{ color:#2DD4BF }
 .hl-amber{ color:#FBBF24 }
 .hl-red{ color:#F87171 }

@@ -72,7 +72,8 @@ const formatDate = (d) =>
                   <p class="post-tags">{post.data.tags.map((t) => <span class="post-tag">{t}</span>)}</p>
                 )}
               </div>
-              <span class="pill-soon">{formatDate(post.data.date)}</span>
+              <span class="post-date">{formatDate(post.data.date)}</span>
+              <a class="btn btn-ghost btn-sm read-more" href={'/articles/' + post.id + '/'}>اقرأ المقال <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H4"/><path d="m10 6-6 6 6 6"/></svg></a>
             </li>
           ))}
         </ul>
