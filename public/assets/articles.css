@@ -42,4 +42,7 @@
 .hl-amber{ color:#FBBF24 }
 .hl-red{ color:#F87171 }
 .hl-muted{ color:var(--muted) }
+.prose iframe{ display:block; width:100%; aspect-ratio:16/9; height:auto; margin:1.6em 0; border:1px solid var(--border); border-radius:14px }
+.prose h1{ font-size:1.9rem; font-weight:700; margin:2.2em 0 .7em }
+.prose strong{ color:#FFFFFF }
 @media print{ .post-back,.post-foot,.site-header,.site-footer{ display:none } }
