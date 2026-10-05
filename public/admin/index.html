@@ -86,6 +86,12 @@ label.check{display:flex;align-items:center;gap:8px;color:var(--text);font-size:
 
   <section id="list" hidden>
     <div class="card">
+      <h2>وضع التطوير</h2>
+      <p class="hint" id="modeState">حالة الموقع: …</p>
+      <div class="actions"><button type="button" class="btn primary" id="btnMode">تشغيل وضع التطوير</button></div>
+      <div id="modeOut" class="status"></div>
+    </div>
+    <div class="card">
       <h2>المقالات</h2>
       <div style="margin:-4px 0 12px"><button type="button" class="btn" id="btnDiag">فحص الاتصال بـGitHub</button> <span id="diagOut" class="hint"></span></div>
       <div id="loading" class="hint">جارٍ التحميل…</div>
@@ -156,7 +162,7 @@ var OWNER='yy0pro', REPO='yahyaalasiri-site', BRANCH='main';
 var ARTICLES='src/content/articles', UPLOADS='public/assets/uploads', UPLOADS_URL='/assets/uploads';
 var TOKEN_KEY='ya_gh_token_v1';
 var token=localStorage.getItem(TOKEN_KEY)||'';
-var editing=null, ed=null, toolbarBound=false;
+var editing=null, ed=null, toolbarBound=false, modeEnabled=false, modeSha=null;
 var COLORS=['#0c024b','#111827','#dc2626','#16a34a','#2563eb','#d97706','#6b7280','#2DD4BF','#FBBF24','#F2F6F4'];
 var RAW_BASE='https://raw.githubusercontent.com/yy0pro/yahyaalasiri-site/main/public/assets/uploads/';
 var CMDS={bold:'toggleBold',italic:'toggleItalic',underline:'toggleUnderline',bulletList:'toggleBulletList',orderedList:'toggleOrderedList',taskList:'toggleTaskList'};
@@ -192,11 +198,15 @@ function newArticle(){editing=null;el('fTitle').value='';el('fSlug').value='';el
 function loadList(){show('setup',false);show('editor',false);show('list',true);el('btnNew').hidden=false;el('btnLogout').hidden=false;el('loading').style.display='block';el('listItems').innerHTML='';api('/contents/'+ARTICLES+'?ref='+BRANCH).then(function(items){el('loading').style.display='none';var files=(items||[]).filter(function(f){return f.type==='file'&&/\.md$/.test(f.name);});if(!files.length){el('listItems').innerHTML='<p class="hint">لا مقالات بعد — ابدأ بـ «مقال جديد».</p>';return;}files.forEach(function(f){var div=document.createElement('div');div.className='item';var n=document.createElement('span');n.className='name';n.textContent=f.name.replace(/\.md$/,'');var b=document.createElement('button');b.className='btn';b.textContent='تحرير';b.onclick=function(){openArticle(f.name);};div.appendChild(n);div.appendChild(b);el('listItems').appendChild(div);});}).catch(function(e){el('loading').textContent='فشل التحميل: '+e.message+' — تأكد من الرمز (جرّب خروج ثم إعادة الربط).';});}
 el('btnSaveToken').onclick=function(){var t=el('tokenInput').value.trim();if(!t){return;}token=t;localStorage.setItem(TOKEN_KEY,t);init();};
 el('btnLogout').onclick=function(){localStorage.removeItem(TOKEN_KEY);token='';location.reload();};
+function loadMode(){api('/contents/src/data/site-mode.json?ref='+BRANCH,{allow404:true}).then(function(f){var v=false;if(f&&f.content){try{v=!!JSON.parse(b64decode(f.content)).maintenance;}catch(e){}}modeSha=f?f.sha:null;modeEnabled=v;renderMode();}).catch(function(e){el('modeState').textContent='تعذر قراءة الحالة: '+e.message;});}
+function renderMode(){el('modeState').textContent='حالة الموقع الآن: '+(modeEnabled?'وضع التطوير مفعّل — الزوار يرون صفحة قيد التطوير':'مباشر — الزوار يرون الموقع');el('btnMode').textContent=modeEnabled?'إيقاف وضع التطوير':'تشغيل وضع التطوير';}
+function setMode(next){var body=JSON.stringify({maintenance:next},null,2)+'\n';el('modeOut').textContent='جارٍ التطبيق…';el('modeOut').className='status ok';api('/contents/src/data/site-mode.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:next?'وضع التطوير: تشغيل':'وضع التطوير: إيقاف',content:b64encode(body),branch:BRANCH,sha:modeSha||undefined})}).then(function(res){modeSha=res.content?res.content.sha:modeSha;modeEnabled=next;renderMode();el('modeOut').textContent='تم ✅ سيُطبّق على الموقع خلال دقيقة تقريباً.';el('modeOut').className='status ok';}).catch(function(e){el('modeOut').textContent='فشل: '+e.message;el('modeOut').className='status err';});}
+el('btnMode').onclick=function(){setMode(!modeEnabled);};
 el('btnDiag').onclick=function(){var o=el('diagOut');if(!token){o.textContent='لا يوجد رمز محفوظ في هذا المتصفح.';return;}o.textContent='جارٍ الفحص…';api('/contents/'+ARTICLES+'?ref='+BRANCH).then(function(items){o.textContent='الاتصال سليم ✅ — الملفات: '+(items?items.length:0);}).catch(function(e){o.textContent=/abort/i.test(String(e.message))?'انتهت المهنة — المتصفح لا يستجيب لـapi.github.com':'فشل الاتصال: '+e.message;});};
 el('btnNew').onclick=newArticle;
 el('btnBack').onclick=loadList;
 el('btnSave').onclick=saveArticle;
-function init(){if(!token){show('setup',true);show('list',false);show('editor',false);el('btnNew').hidden=true;el('btnLogout').hidden=true;return;}loadList();}
+function init(){if(!token){show('setup',true);show('list',false);show('editor',false);el('btnNew').hidden=true;el('btnLogout').hidden=true;return;}loadList();loadMode();}
 init();
 })();
 </script>
